@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -59,4 +60,25 @@ public class JwtService {
                     .signWith(getSignKey()) // Firmar con (metodo de arriba getSignKey())
                     .compact(); // Unimos todo en una sola cadena separada por puntos (xxxxx.yyyyy.zzzzzz)
     }
+
+    /**
+     * Verifica si un token es válido y no ha sido manipulado
+     * 
+     * @param token jwt que se recibe en la request
+     * @return true si la firma es correcta, false en caso contrario
+     */
+    public Boolean isTokenValid(String token) {
+        try {
+            Jwts.parser().verifyWith(getSignKey()).build().parseSignedClaims(token);
+            return true;
+        } catch (JwtException e) { // Si falla por jwt entra por acá y nos dice especificamente que fue lo que pasó
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) { // Si falla por cualquier otra cosa, él es el que lo atrapa
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    
 }
