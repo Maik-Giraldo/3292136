@@ -20,7 +20,7 @@ import io.jsonwebtoken.security.Keys;
  * Servicio que contiene los métodos para crear y validar un jwt
  * JwtService
  */
-@Service
+@Service // bean (ya está instanciado)
 public class JwtService {
 
     /**
